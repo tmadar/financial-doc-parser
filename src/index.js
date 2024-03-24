@@ -3,7 +3,8 @@ import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import { parse } from 'csv-parse';
 import sortByDate from './helpers.js';
-import transform from './creditTransformer.js';
+import { creditTransformer } from './creditTransformer.js';
+import { bankTransformer } from './bankTransformer.js';
 
 const docType = process.argv[2];
 
@@ -36,8 +37,6 @@ const parser = parse({ delimiter: ',', columns: true });
 // Array to accumulate transformed data
 const transformedData = [];
 
-
-
 csvReadStream
   .pipe(parser)
   .on('data', (row) => {
@@ -46,11 +45,19 @@ csvReadStream
       return;
     }
 
-    const transformedOutput = transform(row);
+    let transformedOutput;
+
+    if(docType === 'bank') {
+      transformedOutput = bankTransformer(row);
+    } else {
+      transformedOutput = creditTransformer(row);
+    }
+
     transformedData.push(transformedOutput);
   })
   .on('end', () => {
     const combinedCsvString = transformedData
+        .filter(subArray => subArray.length > 0)
         .sort(sortByDate)
         .map(row => row.join(',')).join('\n');
 

@@ -1,4 +1,6 @@
-doc/input/credit.CSV
+*.csv
+!example.csv
+transformerHelpers.js
 
 # Logs
 logs
