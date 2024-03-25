@@ -8,8 +8,6 @@ import { bankTransformer } from './bankTransformer.js';
 
 const docType = process.argv[2];
 
-console.log(process.argv)
-
 const currentFilePath = fileURLToPath(import.meta.url);
 const inputCsvPath = `../doc/input/${docType}.CSV`;
 const outputCsvPath = resolve(`./doc/output/${docType}Parsed.CSV`);
